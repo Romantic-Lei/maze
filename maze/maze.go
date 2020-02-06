@@ -10,6 +10,7 @@ type Point struct {
 }
 
 // 声明当前坐标四周的其他坐标
+// 移动规则是 右上左下
 var dirs = [4]Point{
 	{0, 1}, {-1, 0}, {0, -1}, {1, 0},
 }
@@ -35,17 +36,25 @@ func (p Point) at(grid [][]int) (int, bool) {
 }
 
 // 迷宫探险
+// maze [][]int 地图
+// start Point 地图中起始点
+// end Point 地图中终点
 func walk(maze [][]int, start Point, end Point) [][]int {
+	// 二位数组切片初始化如下
 	// 初始化稍后要走的路
 	steps := make([][]int, len(maze))
 	for i := range steps {
 		steps[i] = make([]int, len(maze[i]))
 	}
+	
 	// 开始探险
-	q := []Point{start}
+	q := []Point{start} // q = {0, 0}
 	for len(q) > 0 {
 		cur := q[0] // 获取起点的坐标
 		q = q[1:] // 删除当前的位置
+
+		fmt.Println("cur", cur)
+		fmt.Println("q", q)
 
 		for _, dir := range dirs {
 			next := cur.add(dir) // 寻找下一个坐标的正确位置
