@@ -1,12 +1,44 @@
 package main
 import (
 	"fmt"
+	"os"
 )
 
 // 定义一个坐标结构体
 type Point struct {
 	i int
 	j int
+}
+
+// 从文件中读取二维数组
+func readMaze(fileName string) [][]int {
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println("读取文件出现异常 err =", err)
+	}
+	var row, col int
+	// func Fscanf(r io.Reader, format string, a ...interface{}) (n int, err error) 
+	//Fscanf 扫描从 r 中读取的文本，并将连续由空格分隔的值存储为连续的实参，
+	// 其格式由 format 决定。它返回成功解析的条目数。
+	fmt.Fscanf(file, "%d %d\n", &row, &col)
+	// fmt.Println(row, col) // 6 5
+
+	mazeMap := make([][]int, row)
+	for i := range mazeMap {
+		fmt.Println("mazeMap---", i)
+		// 给二维切片分配空间 
+		mazeMap[i] = make([]int, col)
+		for j := range mazeMap[i] {
+			if j == col - 1 {
+				// 解决读取到行尾换行读取用 0 填充
+				fmt.Fscanf(file, "%d\n", &mazeMap[i][j])
+			} else {
+				fmt.Fscanf(file, "%d", &mazeMap[i][j])
+			}
+			fmt.Print(mazeMap[i][j])
+		}
+	}
+	return mazeMap
 }
 
 // 声明当前坐标四周的其他坐标
@@ -122,10 +154,32 @@ func tempFile() {
 		fmt.Println()
 	}
 
-	data := walk(mazeMap, Point{0, 0}, Point{3, 2})
-	// data := walk(mazeMap, Point{0, 0}, Point{len(mazeMap) - 1, len(mazeMap[0]) - 1})
-	if data != nil && data[3][2] == 0 {
-	// if data != nil && data[len(data)-1][len(data[len(mazeMap)-1])-1] == 0 {
+	// data := walk(mazeMap, Point{0, 0}, Point{3, 2})
+	data := walk(mazeMap, Point{0, 0}, Point{len(mazeMap) - 1, len(mazeMap[0]) - 1})
+	// if data != nil && data[3][2] == 0 {
+	if data != nil && data[len(data)-1][len(data[len(mazeMap)-1])-1] == 0 {
+		fmt.Println("不能抵达终点")
+		return 
+	}
+	for _, row := range data {
+		for _, val := range row {
+			fmt.Printf("%3d", val)
+		}
+		fmt.Println()
+	}
+}
+
+func localFile() {
+	mazeMap := readMaze("./maze.in")
+	fmt.Println("mazeMap", len(mazeMap))
+	for _, v := range mazeMap {
+		for _, v1 := range v {
+			fmt.Print(v1, " ")
+		}
+		fmt.Println()
+	}
+	data := walk(mazeMap, Point{0, 0}, Point{len(mazeMap) - 1, len(mazeMap[0]) - 1})
+	if data != nil && data[len(data)-1][len(data[len(mazeMap)-1])-1] == 0 {
 		fmt.Println("不能抵达终点")
 		return 
 	}
@@ -138,5 +192,7 @@ func tempFile() {
 }
 
 func main() {
-	tempFile()
+	// tempFile()
+	localFile()
+
 }
