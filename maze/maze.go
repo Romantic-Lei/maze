@@ -25,7 +25,6 @@ func readMaze(fileName string) [][]int {
 
 	mazeMap := make([][]int, row)
 	for i := range mazeMap {
-		fmt.Println("mazeMap---", i)
 		// 给二维切片分配空间 
 		mazeMap[i] = make([]int, col)
 		for j := range mazeMap[i] {
@@ -35,7 +34,6 @@ func readMaze(fileName string) [][]int {
 			} else {
 				fmt.Fscanf(file, "%d", &mazeMap[i][j])
 			}
-			fmt.Print(mazeMap[i][j])
 		}
 	}
 	return mazeMap
@@ -167,6 +165,7 @@ func tempFile() {
 		}
 		fmt.Println()
 	}
+	fmt.Printf("找到迷宫的最短路径是 %d 步", data[len(mazeMap) - 1][len(mazeMap[0]) - 1])
 }
 
 func localFile() {
@@ -189,6 +188,7 @@ func localFile() {
 		}
 		fmt.Println()
 	}
+	fmt.Printf("找到迷宫的最短路径是 %d 步", data[len(mazeMap) - 1][len(mazeMap[0]) - 1])
 }
 
 func main() {
